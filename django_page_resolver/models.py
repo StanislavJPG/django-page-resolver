@@ -5,11 +5,11 @@ class PageResolverModel(models.Model):
     class Meta:
         abstract = True
 
-    def get_paginated_page(self, queryset=None, *, paginate_by: int):
+    def get_paginated_page(self, queryset=None, order_by='-created_at', *, paginate_by: int):
         """Here we can flexibly get page number by queryset itself to find its paginated page location"""
 
-        if not queryset:
-            queryset = self.__class__.objects.all().order_by('-created_at')
+        if not queryset and order_by:
+            queryset = self.__class__.objects.all().order_by(order_by)
 
         ids = list(queryset.values_list('id', flat=True))
         try:
