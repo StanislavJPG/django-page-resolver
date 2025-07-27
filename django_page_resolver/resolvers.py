@@ -1,3 +1,6 @@
+__all__ = ['page_resolver']
+
+
 class FlexPageResolver:
     """
     This class contains utilities for determining the page number on which a particular object is located
@@ -25,19 +28,6 @@ class FlexPageResolver:
 
             page_number = (index // paginate_by) + 1
             return page_number
-
-    @staticmethod
-    def get_page_for_paginated_qs(qs, target_obj, paginate_by: int):
-        """Here we can flexibly get page number by queryset itself and target to find its page location"""
-
-        ids = list(qs.values_list('id', flat=True))
-        try:
-            index = ids.index(target_obj.id)
-        except ValueError:
-            return None
-
-        page_number = (index // paginate_by) + 1
-        return page_number
 
 
 page_resolver = FlexPageResolver()
