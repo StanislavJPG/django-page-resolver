@@ -8,8 +8,8 @@ class PageResolverModel(models.Model):
     class Meta:
         abstract = True
 
-    def get_page_for_nested_object(
-        self, target_child_instance, related_name: str, order_by='-created_at', *, paginate_by: int
+    def get_page_from_nested_object(
+        self, target_child_instance, related_name: str, siblings_qs=None, order_by='-created_at', *, paginate_by: int
     ):
         """
         Imagine that we have model Post. And we have to find specific comment's page of its post.
@@ -21,7 +21,9 @@ class PageResolverModel(models.Model):
         """
 
         if hasattr(self, related_name):
-            siblings_qs = getattr(self, related_name).all().order_by(order_by)
+            if not siblings_qs and order_by:
+                siblings_qs = getattr(self, related_name).all().order_by(order_by)
+
             ids = list(siblings_qs.values_list('id', flat=True))
 
             try:
@@ -32,7 +34,7 @@ class PageResolverModel(models.Model):
             page_number = (index // paginate_by) + 1
             return page_number
 
-    def get_page_for_queryset_object(self, queryset=None, order_by='-created_at', *, paginate_by: int):
+    def get_page_from_queryset(self, queryset=None, order_by='-created_at', *, paginate_by: int):
         """
         Here we can flexibly get page number by queryset itself to find its paginated page location
         """
