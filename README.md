@@ -28,7 +28,7 @@ INSTALLED_APPS = [
 
 *Usage*
 ----
-Using of page-resolver to determing object's page location in paginated queryset:
+Using of page-resolver to determing object's page location in paginated queryset.
 There is a two ways to do so:
 1) Using model mixin `PageResolverModel`:
    ```python
@@ -46,7 +46,8 @@ There is a two ways to do so:
    comment_page_number = comment.get_page_from_queryset(order_by='-relevancy_value', paginate_by=15)
    # comment_page_number -> return 3
    
-   # or
+   # OR
+   
    post = Post.objects.get(pk=120)
    comment_page_number_from_post = post.get_fk_paginated_page(target_child_instance=comment, related_name='comments', order_by='-relevancy_value', paginate_by=15)
    # comment_page_number_from_post -> return 3
@@ -59,7 +60,8 @@ There is a two ways to do so:
    comment_page_number = page_resolver.get_page_from_queryset(target_instance=comment, order_by='-relevancy_value', items_per_page=15)
    # comment_page_number -> return 3
    
-   # or
+   # OR
+   
    post = Post.objects.get(pk=120)
    comment_page_number_from_post = page_resolver.get_page_from_nested_object(
      parent_instance=post,
@@ -72,7 +74,7 @@ There is a two ways to do so:
    ```
 And you have it!
 
-----
+---
 You can have handsome dynamic HTMX+Bootstrap HTML paginator via templatetag!
 
 **Prerequisites:**
@@ -88,6 +90,7 @@ You can also add some classes to every element in pagination:
 
 `{% render_bootstrap_pagination '#post-list-js' ul_class="some-outstanding-class" li_class="more-class" a_class="text-danger" %}`
 
-**Contributing**
+*Contributing*
+---
 You’re welcome to contribute to django-page-resolver by submitting pull requests, suggesting ideas, or helping improve the project in any way.
 Let’s make this library better together!
