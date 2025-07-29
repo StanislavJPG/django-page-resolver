@@ -58,7 +58,8 @@ class FlexPageResolver:
         target_instance,
         queryset=None,
         order_by: str = '-created_at',
-        *items_per_page: int,
+        *,
+        items_per_page: int,
     ) -> int | None:
         """
         Determine the page number of a given object within a paginated, ordered queryset.
