@@ -15,7 +15,7 @@ See `Usage`:
 *Installation*
 ---
 ```bash
-pip install celery-simple-schedule
+pip install django-page-resolver
 ```
 Then you have to pass `django_page_resolver` to your `INSTALLED_APPS`:
 ```python
