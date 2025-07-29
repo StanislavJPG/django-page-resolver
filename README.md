@@ -5,12 +5,15 @@ django-page-resolver
 This is python utility for Django that helps determine the page number on which a specific model instance appears within a paginated queryset or related object set.
 It also includes a Django templatetag for rendering HTMX + Bootstrap-compatible pagination with support for large page ranges and dynamic page loading.
 
-Imagine that you working on a project, where you need to specify number of page of QuerySet into URL for specific purposes. Something like:
+Imagine you're working on a Django project where you want to highlight or scroll to a specific item on a paginated list — for example, highlighting a comment on a forum post. 
+To do this, you need to calculate which page that comment appears on and then include that page number in the URL, like so:
 
 `localhost:8000/forum/posts/151/?comment=17&page=4`
 
-There is the only question how to do so. 
-See `Usage`:
+This allows you to directly link to the page where the target item exists.
+Instead of manually figuring this out, use `FlexPageResolver` or `PageResolverModel`.
+
+See `Usage`.
 
 *Installation*
 ---
@@ -20,7 +23,7 @@ pip install django-page-resolver
 Then you have to pass `django_page_resolver` to your `INSTALLED_APPS`:
 ```python
 INSTALLED_APPS = [
-  ...,
+  ...
   'django_page_resolver',
   ...
 ]
