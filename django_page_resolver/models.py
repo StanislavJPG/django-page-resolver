@@ -9,7 +9,13 @@ class PageResolverModel(models.Model):
         abstract = True
 
     def get_page_from_nested_object(
-        self, target_child_instance, related_name: str, siblings_qs=None, order_by='-created_at', *, paginate_by: int
+        self,
+        target_child_instance,
+        siblings_qs=None,
+        *,
+        related_name: str = None,
+        order_by: str = None,
+        items_per_page: int,
     ):
         """
         Imagine that we have model Post. And we have to find specific comment's page of its post.
@@ -17,12 +23,17 @@ class PageResolverModel(models.Model):
         We can do next steps:
         post = Post.objects.get(pk=pk)
         comment = post.comments.first()
-        comment_page = post.get_fk_paginated_page(comment, 'comments', paginate_by=10)
+        comment_page = post.get_fk_paginated_page(comment, order_by='created_at', items_per_page=10)
         """
+        if not related_name:
+            related_name = target_child_instance.__class__._meta.verbose_name_plural.replace(' ', '_')
 
         if hasattr(self, related_name):
-            if not siblings_qs and order_by:
-                siblings_qs = getattr(self, related_name).all().order_by(order_by)
+            if not siblings_qs:
+                siblings_qs = getattr(self, related_name).all()
+
+            if order_by:
+                siblings_qs = siblings_qs.order_by(order_by)
 
             ids = list(siblings_qs.values_list('id', flat=True))
 
@@ -31,16 +42,23 @@ class PageResolverModel(models.Model):
             except ValueError:
                 return None
 
-            page_number = (index // paginate_by) + 1
+            page_number = (index // items_per_page) + 1
             return page_number
 
-    def get_page_from_queryset(self, queryset=None, order_by='-created_at', *, paginate_by: int):
+    def get_page_from_queryset(self, queryset=None, *, order_by: str = None, items_per_page: int):
         """
-        Here we can flexibly get page number by queryset itself to find its paginated page location
+        Using:
+
+        comment = Comment.objects.get(pk=pk)
+        queryset = Comment.objects.filter(post__pk=125)
+        comment.get_page_from_queryset(queryset=queryset, order_by='created_at', paginate_by=10)
         """
 
-        if not queryset and order_by:
-            queryset = self.__class__.objects.all().order_by(order_by)
+        if not queryset:
+            queryset = self.__class__.objects.all()
+
+        if order_by:
+            queryset = queryset.order_by(order_by)
 
         ids = list(queryset.values_list('id', flat=True))
         try:
@@ -48,5 +66,5 @@ class PageResolverModel(models.Model):
         except ValueError:
             return None
 
-        page_number = (index // paginate_by) + 1
+        page_number = (index // items_per_page) + 1
         return page_number

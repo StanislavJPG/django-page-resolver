@@ -31,36 +31,43 @@ INSTALLED_APPS = [
 
 *Usage*
 ----
-Using of page-resolver to determing object's page location in paginated queryset.
+Using of page-resolver to determine object's page location in paginated queryset.<br />
 There is a two ways to do so:
-1) Using model mixin `PageResolverModel`:
+1) Using abstract model `PageResolverModel`:<br />
+
    ```python
    from django_page_resolver.models import PageResolverModel
    
    class Comment(PageResolverModel):
        ...
-   # or
+   
+   # OR
+   
    class Post(PageResolverModel):
        ...
    ```
-   And then have next API:
+   And then you have next API:<br />
    ```python
    comment = Comment.objects.get(pk=27)
-   comment_page_number = comment.get_page_from_queryset(order_by='-relevancy_value', paginate_by=15)
+   comment_page_number = comment.get_page_from_queryset(order_by='-relevancy_value', items_per_page=15)
    # comment_page_number -> return 3
    
    # OR
    
    post = Post.objects.get(pk=120)
-   comment_page_number_from_post = post.get_fk_paginated_page(target_child_instance=comment, related_name='comments', order_by='-relevancy_value', paginate_by=15)
+   comment_page_number_from_post = post.get_fk_paginated_page(target_child_instance=comment, order_by='-relevancy_value', items_per_page=15)
    # comment_page_number_from_post -> return 3
    ```
-2) Using `page_resolver` class instance to do the same as was described above.
+2) Using `page_resolver` class instance to do the same as was described above.<br />
    ```python
    from django_page_resolver.resolvers import page_resolver
    
    comment = Comment.objects.get(pk=27)
-   comment_page_number = page_resolver.get_page_from_queryset(target_instance=comment, order_by='-relevancy_value', items_per_page=15)
+   comment_page_number = page_resolver.get_page_from_queryset(
+    target_instance=comment, 
+    order_by='-relevancy_value', 
+    items_per_page=15
+   )
    # comment_page_number -> return 3
    
    # OR
@@ -69,16 +76,33 @@ There is a two ways to do so:
    comment_page_number_from_post = page_resolver.get_page_from_nested_object(
      parent_instance=post,
      target_child_instance=comment,
-     related_name='comments',
      order_by='-relevancy_value',
      items_per_page=15
    )
    # comment_page_number_from_post -> return 3
    ```
-And you have it!
+**Parameters:**<br />
+
+**`get_page_from_nested_object`:<br />**
+- `parent_instance`: The parent model instance (e.g., Post). **Required and uses only from `page_resolver` instance**.<br />
+- `target_child_instance`: The related model instance to locate (e.g., Comment). **Required**.<br />
+- `siblings_qs`: Optional queryset to search in. If not provided, will use target_child_instance's model.<br />
+- `related_name`: The related name on the parent that accesses the child objects (e.g., 'comments'). (By default takes `verbose_name_plural` from the Model's meta.)<br />
+- `order_by`: Field used to order the queryset. Default is `None`.<br />
+- `items_per_page`: The pagination size (number of items per page). **Required**.<br />
 
 ---
-You can have handsome dynamic HTMX+Bootstrap HTML paginator via templatetag!
+
+**`get_page_from_queryset`: <br />**
+- `target_instance`: The instance whose page number we want to find. **Required and uses only from `page_resolver` instance**.<br />
+- `queryset`: Optional queryset to search in. If not provided, will use target_instance's model. (By default takes default `__class__.objects.all()` queryset from the Model)<br />
+- `order_by`: Field to order the queryset by. Default is `None`.<br />
+- `items_per_page`: Number of items per page for pagination. **Required**.<br />
+
+And then you have it!
+
+---
+Additionaly, you can have handsome dynamic HTMX+Bootstrap HTML paginator via templatetag!
 
 **Prerequisites:**
 1) [HTMX js-library.](https://htmx.org/docs/#installing)
@@ -90,6 +114,9 @@ Load `page_resolvers` templatetags into your HTML:
 Then just pass `render_htmx_pagination` templatetag with htmx_target argument in your HTML code like so:
 
 `{% render_htmx_pagination "#comment-list-body-js" %}`
+
+**Note: You need to add `render_htmx_pagination` templatetag inside tag that has htmx_target selector which is you have specified. 
+This is required because of rerender the pagination block with objects list while htmx-request. See examples in `examples` folder.**
 
 That will render default [bootstrap pagination](https://getbootstrap.com/docs/5.3/components/pagination/) with HTMX and nice-UI large pages count support and i18n.
 You can also add some classes to every element in pagination:
