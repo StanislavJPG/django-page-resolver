@@ -84,14 +84,21 @@ You can have handsome dynamic HTMX+Bootstrap HTML paginator via templatetag!
 1) [HTMX js-library.](https://htmx.org/docs/#installing)
 2) [Bootstrap 5.0+](https://getbootstrap.com/docs/5.3/getting-started/download/)
 
-Just pass templatetag with htmx_target argument in your HTML code like so:
+Load `page_resolvers` templatetags into your HTML:
+`{% load page_resolvers %}`
+
+Then just pass `render_htmx_pagination` templatetag with htmx_target argument in your HTML code like so:
 
 `{% render_htmx_pagination "#comment-list-body-js" %}`
 
-That will render default [bootstrap pagination](https://getbootstrap.com/docs/5.3/components/pagination/) with HTMX and nice-UI large pages count support.
+That will render default [bootstrap pagination](https://getbootstrap.com/docs/5.3/components/pagination/) with HTMX and nice-UI large pages count support and i18n.
 You can also add some classes to every element in pagination:
 
 `{% render_bootstrap_pagination '#post-list-js' ul_class="some-outstanding-class" li_class="more-class" a_class="text-danger" %}`
+
+And this is what you get then:
+
+![Pagination example](https://s14.gifyu.com/images/bNSVQ.gif)
 
 *Contributing*
 ---
