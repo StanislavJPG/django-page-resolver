@@ -55,7 +55,7 @@ There is a two ways to do so:
    # OR
    
    post = Post.objects.get(pk=120)
-   comment_page_number_from_post = post.get_fk_paginated_page(target_child_instance=comment, order_by='-relevancy_value', items_per_page=15)
+   comment_page_number_from_post = post.get_page_from_nested_object(target_child_instance=comment, order_by='-relevancy_value', items_per_page=15)
    # comment_page_number_from_post -> return 3
    ```
 2) Using `page_resolver` class instance to do the same as was described above.<br />
