@@ -11,7 +11,6 @@ def _get_position_page(qs, target, order_field: str = None, *, items_per_page: i
     lookup = '__gt' if descending else '__lt'
     position = qs.filter(**{field_name + lookup: getattr(target, field_name)}).count()
 
-    count = position + 1  # Consider object itself
-    page = count // items_per_page + 1
+    page = position // items_per_page + 1
 
     return page
