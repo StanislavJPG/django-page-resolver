@@ -3,6 +3,8 @@ from django.db import models
 
 __all__ = ['PageResolverModel']
 
+from django_page_resolver.utils import _get_position_page
+
 
 class PageResolverModel(models.Model):
     class Meta:
@@ -35,14 +37,10 @@ class PageResolverModel(models.Model):
             if order_by:
                 siblings_qs = siblings_qs.order_by(order_by)
 
-            ids = list(siblings_qs.values_list('id', flat=True))
+            page_number = _get_position_page(
+                siblings_qs, target_child_instance, order_by, items_per_page=items_per_page
+            )
 
-            try:
-                index = ids.index(target_child_instance.id)
-            except ValueError:
-                return None
-
-            page_number = (index // items_per_page) + 1
             return page_number
 
     def get_page_from_queryset(self, queryset=None, *, order_by: str = None, items_per_page: int):
@@ -60,11 +58,6 @@ class PageResolverModel(models.Model):
         if order_by:
             queryset = queryset.order_by(order_by)
 
-        ids = list(queryset.values_list('id', flat=True))
-        try:
-            index = ids.index(self.pk)
-        except ValueError:
-            return None
+        page_number = _get_position_page(queryset, self, order_by, items_per_page=items_per_page)
 
-        page_number = (index // items_per_page) + 1
         return page_number

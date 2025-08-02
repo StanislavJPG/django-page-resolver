@@ -1,5 +1,7 @@
 __all__ = ['page_resolver']
 
+from django_page_resolver.utils import _get_position_page
+
 
 class FlexPageResolver:
     """
@@ -50,13 +52,10 @@ class FlexPageResolver:
             if order_by:
                 siblings_qs = siblings_qs.order_by(order_by)
 
-            related_ids = list(siblings_qs.values_list('id', flat=True))
-            try:
-                child_index = related_ids.index(target_child_instance.id)
-            except ValueError:
-                return None
+            page_number = _get_position_page(
+                siblings_qs, target_child_instance, order_by, items_per_page=items_per_page
+            )
 
-            page_number = (child_index // items_per_page) + 1
             return page_number
 
     @staticmethod
@@ -92,13 +91,8 @@ class FlexPageResolver:
         if order_by:
             queryset = queryset.order_by(order_by)
 
-        ordered_ids = list(queryset.values_list('id', flat=True))
-        try:
-            instance_index = ordered_ids.index(target_instance.id)
-        except ValueError:
-            return None
+        page_number = _get_position_page(queryset, target_instance, order_by, items_per_page=items_per_page)
 
-        page_number = (instance_index // items_per_page) + 1
         return page_number
 
 

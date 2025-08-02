@@ -22,3 +22,7 @@ line-length = 120
 
 [tool.ruff.format]
 quote-style = "single"
+
+
+[tool.poetry.group.test.dependencies]
+factory-boy = "^3.3.3"
