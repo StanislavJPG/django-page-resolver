@@ -9,7 +9,11 @@ register = template.Library()
 def classes_by_lookup_url(context, instance_pk, url_lookup):
     """
     Use this simple_tag inside class=""
-    Example = class="row {% classes_by_lookup_url comment 'comment' %}"
+    Example:
+        class="row {% classes_by_lookup_url instance_pk=comment url_lookup='comment' %}"
+
+    - `instance_pk`: The unique ID of the instance (could be UUID or another PK), that the page should scroll to.
+    - `url_lookup`: The name of the parameter in the URL. (Like `/?comment=12&page=2`, where `url_lookup` is a `comment` parameter name.)
     """
     request = context['request']
     identifier = f'scroll-instance-{instance_pk}'

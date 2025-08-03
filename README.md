@@ -101,14 +101,52 @@ There is a two ways to do so:
 
 And then you have it!
 
+*Front-end utilities*
 ---
-Additionaly, you can have handsome dynamic HTMX+Bootstrap HTML paginator via templatetag!
 
 **Prerequisites:**
 1) [HTMX js-library.](https://htmx.org/docs/#installing)
 2) [Bootstrap 5.0+](https://getbootstrap.com/docs/5.3/getting-started/download/)
 
-Load `page_resolvers` templatetags into your HTML:
+If you've set up page_resolver logic, you can use additional template tags and JavaScript utilities
+to automatically scroll to a specific instance on the page.
+
+The JavaScript reads URL parameters that contain the unique identifier of the instance to scroll to.
+
+**Example:** <br />
+1. Load `page_resolvers` templatetags in your HTML: <br />
+   `{% load page_resolvers %}`
+
+
+2. Include the script and CSS styles in your HTML: <br />
+   ````
+   <script src="{% static 'resolvers/js/page_resolvers.js' %}"></script> 
+   <link type="text/css" href="{% static 'resolvers/css/page_resolvers.css' %}" rel="stylesheet">
+   ````
+
+
+3. Inside your {% for %} loop, register the object to be scrolled to: <br />
+   `{% register_scroll_obj_unique_pk instance_pk=comment.pk %}` (You can use another unique identifier, such as a UUID.)
+
+   This will mark the object as a scroll target.
+
+
+4. Finally, add this tag inside the class attribute of your main HTML element:<br />
+   `{% classes_by_lookup_url instance_pk=comment.pk url_lookup='comment' %}`(Or other unique identified like UUID)
+
+   Like so: `<div class="container {% classes_by_lookup_url instance_pk=comment.pk url_lookup='comment' %}">...</div>`<br />
+   <br />
+   **`classes_by_lookup_url` takes the following arguments: <br />**
+   - `instance_pk`: The unique ID of the instance (could be UUID or another PK), that the page should scroll to.<br />
+   - `url_lookup`: The name of the parameter in the URL. (Like `/?comment=12&page=2`, where `url_lookup` is a `comment` parameter name.)<br />
+
+(See examples in `/examples/templatetags/register_instance_scroll.html` within the library directory.)
+
+----
+
+**A**dditionaly, you can have handsome dynamic HTMX+Bootstrap HTML paginator via templatetag!
+
+Load `page_resolvers` templatetags into your HTML: <br />
 `{% load page_resolvers %}`
 
 Then just pass `render_htmx_pagination` templatetag with htmx_target argument in your HTML code like so:
