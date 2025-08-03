@@ -1,0 +1,22 @@
+{% load i18n page_resolvers %}
+<script src="{% static 'js/page_resolvers.js' %}"></script>
+<link type="text/css" href="{% static 'css/page_resolvers.css' %}" rel="stylesheet">
+
+<hr class="mb-5 text-secondary">
+<div id="comment-list-body-js">
+  {% for comment in comments %}
+    {% register_scroll_obj_unique_pk comment.pk %}
+    <div class="container {% classes_by_lookup_url instance_pk=comment.pk url_lookup='comment' %}">
+      <div class="row">
+        <div class="d-flex flex-row-reverse justify-content-end">
+          <div class="d-flex flex-column">
+            <div id="comment-text-body-{{ comment.uuid }}" class="text-break p-1 mt-1">
+              {{ comment.comment|safe }}
+            </div>
+          </div>
+          ...
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,5 @@
+.fade-remove {
+    transition: background-color 0.5s ease-out;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+}

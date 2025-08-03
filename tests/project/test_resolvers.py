@@ -8,7 +8,7 @@ from django_page_resolver.utils import _get_position_page
 from tests.app.factories import CommentFactory, PostFactory
 
 
-class TestApp(TestCase):
+class TestResolvers(TestCase):
     def setUp(self):
         CommentFactory.create_batch(size=150, with_delay=True)
         comment_model = get_model('app', 'Comment')

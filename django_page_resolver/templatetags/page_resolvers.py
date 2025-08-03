@@ -6,6 +6,25 @@ register = template.Library()
 
 
 @register.simple_tag(takes_context=True)
+def classes_by_lookup_url(context, instance_pk, url_lookup):
+    """
+    Use this simple_tag inside class=""
+    Example = class="row {% classes_by_lookup_url comment 'comment' %}"
+    """
+    request = context['request']
+    identifier = f'scroll-instance-{instance_pk}'
+    return f'{identifier} bg-warning-subtle rounded fadeDiv' if request.GET.get(url_lookup) == str(instance_pk) else ''
+
+
+@register.simple_tag(takes_context=True)
+def register_scroll_obj_unique_pk(context, instance_pk):
+    request = context['request']
+    if str(instance_pk) in [value for value in request.GET.values()]:
+        return format_html(f'<script>window.scrollToInstance = "{instance_pk}";</script>')
+    return ''
+
+
+@register.simple_tag(takes_context=True)
 def render_htmx_pagination(context, htmx_target, **kwargs):
     """
 

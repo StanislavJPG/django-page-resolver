@@ -25,7 +25,7 @@ class PageResolverModel(models.Model):
         We can do next steps:
         post = Post.objects.get(pk=pk)
         comment = post.comments.first()
-        comment_page = post.get_fk_paginated_page(comment, order_by='created_at', items_per_page=10)
+        comment_page = post.get_fk_paginated_page(comment, items_per_page=10)
         """
         if not related_name:
             related_name = target_child_instance.__class__._meta.verbose_name_plural.replace(' ', '_')
@@ -49,7 +49,7 @@ class PageResolverModel(models.Model):
 
         comment = Comment.objects.get(pk=pk)
         queryset = Comment.objects.filter(post__pk=125)
-        comment.get_page_from_queryset(queryset=queryset, order_by='created_at', paginate_by=10)
+        comment.get_page_from_queryset(queryset=queryset, paginate_by=10)
         """
 
         if not queryset:
