@@ -142,6 +142,10 @@ The JavaScript reads URL parameters that contain the unique identifier of the in
 
 (See examples in `/examples/templatetags/register_instance_scroll.html` within the library directory.)
 
+Finally, you will get:
+
+![Scroller example](https://s14.gifyu.com/images/bNTgj.gif)
+
 ----
 
 **A**dditionaly, you can have handsome dynamic HTMX+Bootstrap HTML paginator via templatetag!
