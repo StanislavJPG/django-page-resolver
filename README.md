@@ -142,8 +142,8 @@ The JavaScript reads URL parameters that contain the unique identifier of the in
 
 (See examples in `/examples/templatetags/register_instance_scroll.html` within the library directory.)
 
-Then you will get:
-![Scroller example](https://s14.gifyu.com/images/bNTgj.gif)
+And then you will have it:<br />
+![Scroller example](https://s3.ezgif.com/tmp/ezgif-34d15999abb7f7.gif)
 
 ----
 
